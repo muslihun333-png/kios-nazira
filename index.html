@@ -2,11 +2,142 @@
 <html lang="id">
 <head>
   <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kios Nazira - Pembukuan Usaha</title>
   <meta name="theme-color" content="#0d0d0d">
-  <?!= include("Logo"); ?>
-  <?!= include("CSS"); ?>
+  
+  <!-- CSS Terintegrasi -->
+  <style>
+    :root{--brand:#b8892b;--brand-d:#8a6414;--brand-soft:#f7edd0;--bg:#f1f5f9;--card:#fff;--text:#0f2330;--muted:#64748b;--line:#e2e8f0;--green:#15803d;--red:#dc2626;--shadow:0 1px 2px #0f23300d,0 4px 16px #0f23300a;--r:16px}
+    @media(prefers-color-scheme:dark){:root{--bg:#0b1720;--card:#12232f;--text:#e6eef3;--muted:#8fa3b3;--line:#21384a;--brand-soft:#3a2e10;--green:#4ade80;--red:#f87171;--shadow:none}}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif}
+    button,input,select{font:inherit;color:inherit}button{cursor:pointer}.hidden{display:none!important}
+    .i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+    [data-role="Kasir"] .admin-only{display:none!important}
+
+    /* ---- Logo / Brand ---- */
+    .logo{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),#2a2010);color:#fff;font-weight:800;font-size:17px;box-shadow:0 6px 18px #b8892b55}
+
+    /* ---- Login ---- */
+    .auth{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+    .auth-art{background:linear-gradient(145deg,#0d0d0d,#1b1508 60%,#2a2010);color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+    .auth-art::before,.auth-art::after{content:"";position:absolute;border-radius:50%;background:#ffffff12}
+    .auth-art::before{width:420px;height:420px;right:-140px;bottom:-120px}.auth-art::after{width:240px;height:240px;right:90px;top:-90px}
+    .auth-art h2{font-size:34px;line-height:1.15;margin:0 0 12px;letter-spacing:-1px;max-width:380px}.auth-art p{margin:0;color:#f0dfae;max-width:340px}
+    .auth-art ul{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:10px;color:#f0dfae;font-size:13px}.auth-art li::before{content:"✓";margin-right:9px;font-weight:800}
+    .auth-panel{display:grid;place-items:center;padding:28px}
+    .auth-card{width:100%;max-width:380px}
+    .auth-card h1{font-size:26px;letter-spacing:-.8px;margin:18px 0 4px}.auth-card>p{margin:0 0 24px;color:var(--muted)}
+    .field{display:grid;gap:6px;margin-bottom:16px;font-weight:600;font-size:12px;color:var(--muted)}
+    .input-wrap{position:relative}.input-wrap .i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);width:18px;height:18px}
+    .field input,.field select,.filters input{width:100%;min-width:0;border:1.5px solid var(--line);border-radius:12px;background:var(--card);padding:12px 13px;outline:none;color:var(--text);font-size:14px;font-weight:500;transition:.15s}
+    .input-wrap input{padding-left:42px}.input-wrap .toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;padding:8px;color:var(--muted);display:grid}
+    .field input:focus,.field select:focus,.filters input:focus{border-color:var(--brand);box-shadow:0 0 0 4px #b8892b22}
+    .alert{padding:11px 13px;border-radius:12px;font-size:13px;font-weight:600;margin-bottom:16px;background:#fee2e2;color:#991b1b}
+    .alert.info{background:#e0f2fe;color:#075985}
+    @media(prefers-color-scheme:dark){.alert{background:#4c1d1d;color:#fecaca}.alert.info{background:#0c3550;color:#bae6fd}}
+    .btn{border:1.5px solid transparent;border-radius:12px;padding:11px 16px;font-weight:700;font-size:13px;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    .btn:active{transform:scale(.98)}.btn:disabled{opacity:.6;cursor:wait}
+    .btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-d));color:#fff;box-shadow:0 4px 14px #b8892b44}.btn-primary:hover{filter:brightness(1.07)}
+    .btn-light{background:var(--card);border-color:var(--line);color:var(--text)}.btn-light:hover{background:var(--bg)}
+    .btn-block{width:100%;padding:13px}.btn-sm{padding:7px 11px;font-size:12px;border-radius:9px}
+
+    /* ---- Shell ---- */
+    .shell{min-height:100vh;display:flex}
+    .sidebar{width:248px;background:var(--card);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0}
+    .brand{display:flex;align-items:center;gap:11px;padding:0 8px 24px}.brand .logo{width:46px;height:46px;border-radius:50%}.brand strong{display:block;font-size:15px}.brand small{color:var(--muted);font-size:11px}
+    .nav{display:grid;gap:4px}
+    .nav-link{border:0;background:none;color:var(--muted);text-align:left;padding:11px 13px;border-radius:12px;display:flex;gap:12px;align-items:center;font-weight:600;font-size:13px;transition:.15s}
+    .nav-link:hover{background:var(--bg);color:var(--text)}.nav-link.active{background:var(--brand-soft);color:var(--brand-d)}
+    @media(prefers-color-scheme:dark){.nav-link.active{color:#e6c35c}}
+    .side-user{margin-top:auto;border-top:1px solid var(--line);padding-top:14px;display:flex;align-items:center;gap:10px}
+    .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#2a2010);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;flex-shrink:0}
+    .side-user div{min-width:0;flex:1}.side-user strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.side-user small{color:var(--muted);font-size:11px}
+    .icon-btn{border:0;background:none;color:var(--muted);padding:8px;border-radius:10px;display:grid}.icon-btn:hover{background:var(--bg);color:var(--red)}
+    .main{min-width:0;flex:1;padding:26px 32px 28px;max-width:1180px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;gap:12px}
+    .eyebrow{font-size:10px;letter-spacing:1.6px;color:var(--brand);font-weight:800}.topbar h1{margin:2px 0 0;font-size:26px;letter-spacing:-.8px}
+    .today-pill{background:var(--card);border:1px solid var(--line);padding:8px 13px;border-radius:99px;color:var(--muted);font-size:12px;font-weight:600;white-space:nowrap}
+    .mobile-user{display:none}
+
+    /* ---- Komponen Dashboard & Lainnya ---- */
+    .hero{background:linear-gradient(135deg,#0d0d0d,#2a2010 85%);color:#fff;border-radius:20px;padding:24px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 10px 30px #2a201044}
+    .hero::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#ffffff14;right:-60px;top:-80px}
+    .hero span{font-size:12px;color:#f0dfae;font-weight:600}.hero strong{display:block;font-size:32px;letter-spacing:-1px;margin:4px 0 16px;overflow-wrap:anywhere}
+    .hero-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative;z-index:1}
+    .hero-split div{background:#ffffff1f;border-radius:12px;padding:11px 13px;backdrop-filter:blur(4px)}.hero-split small{display:flex;gap:6px;align-items:center;color:#f0dfae;font-size:11px}.hero-split b{display:block;font-size:16px;margin-top:2px}
+    .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:16px}
+    .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);display:flex;gap:13px;align-items:center}
+    .stat .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex-shrink:0}.ic.g{background:#dcfce7;color:#15803d}.ic.r{background:#fee2e2;color:#dc2626}
+    @media(prefers-color-scheme:dark){.ic.g{background:#12372a}.ic.r{background:#46201f}}
+    .stat span{display:block;color:var(--muted);font-size:12px;font-weight:600}.stat strong{display:block;font-size:20px;letter-spacing:-.5px;overflow-wrap:anywhere}.stat small{color:var(--muted);font-size:11px}
+    .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line)}
+    .panel-head h3{font-size:15px;margin:0 0 2px}.panel-head p,.welcome p{margin:0;color:var(--muted);font-size:12px}
+    .panel-body{padding:20px}.welcome{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:16px}.welcome h2{font-size:19px;margin:0 0 2px}
+    .chart{display:flex;align-items:flex-end;gap:10px;height:150px;padding:20px 20px 12px}
+    .bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;min-width:0}
+    .bar i{display:block;width:100%;max-width:46px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#d4a73f,var(--brand-d));min-height:4px;transition:height .5s}
+    .bar small{font-size:10px;color:var(--muted);font-weight:600}.bar em{font-style:normal;font-size:9px;color:var(--muted)}
+    .tx-list{list-style:none;margin:0;padding:4px 0}
+    .tx-item{display:flex;align-items:center;gap:13px;padding:12px 20px;border-bottom:1px solid var(--line)}.tx-item:last-child{border:0}
+    .tx-ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;background:var(--bg);color:var(--muted)}
+    .tx-ic.in{background:#dcfce7;color:#15803d}.tx-ic.out{background:#fee2e2;color:#dc2626}
+    @media(prefers-color-scheme:dark){.tx-ic.in{background:#12372a}.tx-ic.out{background:#46201f}}
+    .tx-main{flex:1;min-width:0}.tx-main strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tx-main small{color:var(--muted);font-size:11px}
+    .tx-amt{font-weight:800;font-size:13px;white-space:nowrap}.money-in{color:var(--green)}.money-out{color:var(--red)}
+
+    .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+    .chip{border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:11px 8px;font-weight:700;font-size:12px;text-align:center;transition:.15s}
+    .chip.active{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-d)}
+    @media(prefers-color-scheme:dark){.chip.active{color:#e6c35c}}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.form-grid .field{margin-bottom:14px}.full{grid-column:1/-1}
+    .preview{grid-column:1/-1;background:var(--brand-soft);color:var(--brand-d);border-radius:12px;padding:12px 14px;font-weight:700;display:flex;justify-content:space-between;margin-bottom:14px}
+    @media(prefers-color-scheme:dark){.preview{color:#e6c35c}}
+    .form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:6px}
+    .note{margin:0 0 14px;padding:11px 13px;background:var(--bg);border-radius:10px;color:var(--muted);font-size:12px}
+    .filters{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;padding:16px 20px}.filters label{display:grid;gap:5px;font-size:11px;font-weight:700;color:var(--muted);min-width:150px}.filters input{padding:9px 11px}
+    .table-wrap{overflow:auto;width:100%}table{border-collapse:collapse;width:100%;min-width:640px}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;font-size:12px}
+    th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.7px;font-weight:800;background:var(--bg)}tbody tr:last-child td{border:0}.right{text-align:right}
+    .badge{display:inline-block;padding:3px 9px;border-radius:99px;background:var(--bg);color:var(--muted);font-size:10px;font-weight:800}
+    .badge.good{background:#dcfce7;color:#15803d}.badge.low{background:#fee2e2;color:#b91c1c}.badge.admin{background:var(--brand-soft);color:var(--brand-d)}
+    @media(prefers-color-scheme:dark){.badge.good{background:#12372a;color:#4ade80}.badge.low{background:#46201f;color:#fca5a5}}
+    .report-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:6px 20px 18px}
+    .report-item{padding:14px;border:1px solid var(--line);border-radius:12px}.report-item span{display:block;color:var(--muted);font-size:11px;font-weight:600}.report-item strong{display:block;margin-top:5px;font-size:17px;overflow-wrap:anywhere}
+    .empty{padding:28px;text-align:center;color:var(--muted)}
+    .loading{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:50;color:var(--muted);font-weight:600}
+    .spin{width:34px;height:34px;border:4px solid var(--line);border-top-color:var(--brand);border-radius:50%;animation:s .8s linear infinite;margin:0 auto 12px}@keyframes s{to{transform:rotate(360deg)}}
+    .toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:#0f2330;color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;font-size:13px;box-shadow:0 10px 30px #0004;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;text-align:center}
+    .toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{background:#b91c1c}.toast.success{background:#8a6414}
+    @media(min-width:861px){.toast{bottom:28px}}
+
+    /* ---- Responsif HP ---- */
+    @media(max-width:1000px){.main{padding:22px 18px}}
+    @media(max-width:860px){
+     .auth{grid-template-columns:1fr}.auth-art{display:none}
+     .sidebar{position:fixed;inset:auto 0 0 0;top:auto;width:100%;height:auto;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);z-index:40;background:var(--card)}
+     .brand,.side-user{display:none}.nav{display:flex;width:100%;gap:2px}
+     .nav-link{flex:1;flex-direction:column;gap:3px;padding:7px 2px;font-size:10px;text-align:center;min-width:0;border-radius:10px}.nav-link .i{width:21px;height:21px}
+     .main{padding:18px 14px 96px}.topbar h1{font-size:22px}.today-pill{display:none}
+     .mobile-user{display:flex;align-items:center;gap:8px}.mobile-user .avatar{width:34px;height:34px;font-size:12px}
+     .hero strong{font-size:27px}.grid2{gap:10px}.stat{padding:13px;flex-direction:column;align-items:flex-start;gap:9px}.stat strong{font-size:17px}
+     .form-grid{grid-template-columns:1fr}.report-grid{grid-template-columns:repeat(2,1fr);padding:6px 14px 14px}
+     .panel-head,.tx-item{padding-left:15px;padding-right:15px}.panel-body{padding:16px 15px}.filters{padding:14px 15px}.filters label{flex:1;min-width:130px}.filters .btn{flex:1}
+     .welcome h2{font-size:17px}.chips{grid-template-columns:repeat(3,1fr)}
+    }
+    .void td{text-decoration:line-through;opacity:.5}.void td:last-child{text-decoration:none;opacity:1}
+    .modal-bg{position:fixed;inset:0;background:#000a;display:grid;place-items:center;z-index:70;padding:16px}
+    .modal{background:var(--card);border-radius:var(--r);padding:22px;width:100%;max-width:400px}.modal h3{margin:0 0 6px;font-size:17px}.modal p{margin:0 0 16px;color:var(--muted);font-size:13px}
+    td .btn-sm{margin-left:4px}
+    @media print{.sidebar,.topbar,.btn,.filters,.toast{display:none!important}.main{padding:0}.panel{box-shadow:none;border:0}.view{display:none!important}#view-reports{display:block!important}body{background:#fff;color:#000}}
+  </style>
 </head>
 <body>
+
+<!-- Simbol Ikon SVG -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></symbol>
@@ -36,7 +167,7 @@
       <p>Catat penjualan, pembelian, dan stok ikan bersama tim — dari HP maupun laptop.</p>
       <ul><li>Akun terpisah untuk setiap karyawan</li><li>Stok otomatis dari transaksi</li><li>Siapa mencatat apa, tersimpan jelas</li></ul>
     </div>
-    <small style="color:#b6ece6">© Kios Nazira · Data tersimpan di Google Sheets</small>
+    <small style="color:#b6ece6">© Kios Nazira</small>
   </div>
   <div class="auth-panel">
     <form class="auth-card" id="login-form" autocomplete="on">
@@ -51,7 +182,6 @@
         <span class="input-wrap"><svg class="i"><use href="#i-lock"/></svg><input id="login-pass" type="password" autocomplete="current-password" required placeholder="••••••••"><button type="button" class="toggle" id="toggle-pass" aria-label="Tampilkan kata sandi"><svg class="i"><use href="#i-eye"/></svg></button></span>
       </label>
       <button class="btn btn-primary btn-block" id="login-btn" type="submit">Masuk</button>
-      <p style="margin:18px 0 0;font-size:12px;color:var(--muted);text-align:center">Lupa kata sandi? Hubungi Admin kios.</p>
     </form>
   </div>
 </section>
@@ -168,7 +298,6 @@
           <div class="report-item"><span>Pembelian ikan</span><strong id="report-purchases">Rp0</strong></div>
           <div class="report-item"><span>Biaya operasional</span><strong id="report-operating">Rp0</strong></div>
         </div>
-        <p class="note" style="margin:0 20px 14px">Selisih arus kas bukan laba bersih; laba akurat perlu harga pokok dan stok akhir.</p>
         <div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Keterangan</th><th>Metode</th><th class="right">Nominal</th><th>Oleh</th></tr></thead><tbody id="report-body"></tbody></table></div>
       </div>
     </section>
@@ -183,37 +312,86 @@
           <label class="field">Ulangi kata sandi baru<input type="password" id="pw-new2" autocomplete="new-password" minlength="6" required></label>
         </div><div class="form-actions"><button class="btn btn-primary" type="submit">Ubah kata sandi</button></div></form>
       </div>
-
-      <div class="panel admin-only">
-        <div class="panel-head"><div><h3>Saldo awal</h3><p>Saldo pada tanggal mulai pembukuan. Jangan diubah tanpa rekonsiliasi.</p></div></div>
-        <form class="panel-body" id="settings-form"><div class="form-grid">
-          <label class="field">Saldo awal tunai (Rp)<input type="number" min="0" step="1" id="opening-cash" required></label>
-          <label class="field">Saldo awal bank (Rp)<input type="number" min="0" step="1" id="opening-bank" required></label>
-        </div><div class="form-actions"><button class="btn btn-primary" type="submit">Simpan saldo awal</button></div></form>
-      </div>
-
-      <div class="panel admin-only">
-        <div class="panel-head"><div><h3>Pengguna</h3><p>Kelola akun karyawan yang boleh masuk.</p></div><button class="btn btn-primary btn-sm" id="new-user">+ Pengguna</button></div>
-        <form class="panel-body hidden" id="user-form" style="border-bottom:1px solid var(--line)"><div class="form-grid">
-          <label class="field">Username<input id="u-username" placeholder="mis. siti" autocapitalize="none" required></label>
-          <label class="field">Nama lengkap<input id="u-name" required></label>
-          <label class="field">Peran<select id="u-role"><option>Kasir</option><option>Admin</option></select></label>
-          <label class="field">Kata sandi<input type="password" id="u-pass" autocomplete="new-password" placeholder="Minimal 6 karakter"></label>
-          <label class="field full" id="u-active-wrap" style="grid-template-columns:auto 1fr;align-items:center;gap:9px"><input type="checkbox" id="u-active" checked style="width:auto"> Akun aktif</label>
-        </div><div class="form-actions"><button class="btn btn-light" type="button" id="cancel-user">Batal</button><button class="btn btn-primary" type="submit">Simpan pengguna</button></div></form>
-        <div class="table-wrap"><table style="min-width:520px"><thead><tr><th>Pengguna</th><th>Peran</th><th>Status</th><th>Login terakhir</th><th></th></tr></thead><tbody id="users-body"></tbody></table></div>
-        <p class="note" style="margin:14px 20px">Kasir tidak melihat saldo, laporan, maupun pengaturan, dan tidak dapat mencatat modal/pengambilan pribadi.</p>
-      </div>
     </section>
   </main>
 </div>
-<div class="modal-bg hidden" id="modal"><div class="modal">
-  <h3>Batalkan transaksi</h3><p id="modal-text"></p>
-  <label class="field">Alasan pembatalan<input id="modal-reason" placeholder="Contoh: pembeli batal"></label>
-  <div class="alert hidden" id="modal-err"></div>
-  <div class="form-actions"><button class="btn btn-light" id="modal-close" type="button">Kembali</button><button class="btn btn-primary" id="modal-ok" type="button">Batalkan transaksi</button></div>
-</div></div>
+
 <div class="toast" id="toast"></div>
-<?!= include("JavaScript"); ?>
+
+<!-- JavaScript Terintegrasi -->
+<script>
+const $ = id => document.getElementById(id);
+const rupiah = n => new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
+const todayISO = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store = {
+  get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},
+  set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},
+  del:k=>{try{localStorage.removeItem(k)}catch(e){}}
+};
+
+const TYPES = [["Penjualan","Penjualan"],["Pembelian","Pembelian"],["Operasional","Biaya Ops"],["Modal","Setoran Modal"],["Pengambilan","Ambil Pribadi"],["Transfer","Transfer"]];
+const VIEW_TITLES = {dashboard:"Dashboard",transaction:"Transaksi",cashbook:"Buku Kas",inventory:"Stok Ikan",reports:"Laporan",settings:"Pengaturan"};
+let me = {name: "Admin Kios", username: "admin", role: "Admin"};
+let lastAuto = "Penjualan";
+
+function toast(msg, type="success") {
+  const t=$("toast"); t.textContent=msg; t.className="toast show "+type;
+  clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove("show"), 4200);
+}
+
+function showAuth() {
+  $("loading").classList.add("hidden"); $("app").classList.add("hidden"); $("auth").classList.remove("hidden");
+}
+
+function loadInitial() {
+  $("auth").classList.add("hidden"); $("app").classList.remove("hidden"); $("loading").classList.add("hidden");
+  document.body.dataset.role = me.role;
+  document.querySelectorAll(".js-avatar").forEach(e=>e.textContent="AK");
+  document.querySelectorAll(".js-name").forEach(e=>e.textContent=me.name);
+  document.querySelectorAll(".js-role").forEach(e=>e.textContent=me.role);
+  $("me-line").textContent = `${me.name} · @${me.username} · ${me.role}`;
+  showView("dashboard");
+}
+
+function showView(view) {
+  document.querySelectorAll(".view").forEach(el=>el.classList.add("hidden"));
+  $("view-"+view).classList.remove("hidden");
+  document.querySelectorAll(".nav-link").forEach(el=>el.classList.toggle("active", el.dataset.view===view));
+  $("page-title").textContent = VIEW_TITLES[view]||"Dashboard";
+  window.scrollTo({top:0});
+}
+
+function renderChips() {
+  const cur=$("tx-type").value;
+  $("type-chips").innerHTML = TYPES.map(t=>`<button type="button" class="chip ${t[0]===cur?"active":""}" data-type="${t[0]}">${t[1]}</button>`).join("");
+}
+
+function setType(type) {
+  $("tx-type").value = type;
+  const cat=$("tx-category"); if(!cat.value || cat.value===lastAuto) cat.value=type; lastAuto=type;
+  renderChips();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  $("today-label").textContent = new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  $("tx-date").value = todayISO();
+  
+  // Simulasi Login Statis untuk GitHub Pages
+  $("login-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    loadInitial();
+    toast("Berhasil masuk ke Kios Nazira!");
+  });
+
+  document.querySelectorAll(".js-logout").forEach(b=>b.addEventListener("click", showAuth));
+  document.querySelectorAll(".nav-link").forEach(b=>b.addEventListener("click", ()=>showView(b.dataset.view)));
+  $("type-chips").addEventListener("click", e => { const c=e.target.closest("[data-type]"); if(c) setType(c.dataset.type); });
+
+  renderChips();
+  showAuth(); // Tampilkan halaman login saat pertama dibuka
+});
+</script>
+
 </body>
 </html>
