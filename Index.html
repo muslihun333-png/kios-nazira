@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <base target="_top">
+  <meta name="theme-color" content="#0d0d0d">
+  <?!= include("Logo"); ?>
+  <?!= include("CSS"); ?>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M23 18l-9.5-9.5-5 5L1 6"/><path d="M17 18h6v-6"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+</defs></svg>
+
+<div class="loading" id="loading"><div><div class="spin"></div>Memuat…</div></div>
+
+<!-- ================= LOGIN ================= -->
+<section class="auth hidden" id="auth">
+  <div class="auth-art">
+    <div class="logo" style="width:84px;height:84px"></div>
+    <div>
+      <h2>Belanja mudah, hidup lebih baik.</h2>
+      <p>Catat penjualan, pembelian, dan stok ikan bersama tim — dari HP maupun laptop.</p>
+      <ul><li>Akun terpisah untuk setiap karyawan</li><li>Stok otomatis dari transaksi</li><li>Siapa mencatat apa, tersimpan jelas</li></ul>
+    </div>
+    <small style="color:#b6ece6">© Kios Nazira · Data tersimpan di Google Sheets</small>
+  </div>
+  <div class="auth-panel">
+    <form class="auth-card" id="login-form" autocomplete="on">
+      <div class="logo"></div>
+      <h1>Selamat datang</h1>
+      <p>Masuk untuk membuka pembukuan Kios Nazira.</p>
+      <div class="alert hidden" id="login-alert"></div>
+      <label class="field">Username
+        <span class="input-wrap"><svg class="i"><use href="#i-user"/></svg><input id="login-user" autocomplete="username" autocapitalize="none" spellcheck="false" required placeholder="username Anda"></span>
+      </label>
+      <label class="field">Kata sandi
+        <span class="input-wrap"><svg class="i"><use href="#i-lock"/></svg><input id="login-pass" type="password" autocomplete="current-password" required placeholder="••••••••"><button type="button" class="toggle" id="toggle-pass" aria-label="Tampilkan kata sandi"><svg class="i"><use href="#i-eye"/></svg></button></span>
+      </label>
+      <button class="btn btn-primary btn-block" id="login-btn" type="submit">Masuk</button>
+      <p style="margin:18px 0 0;font-size:12px;color:var(--muted);text-align:center">Lupa kata sandi? Hubungi Admin kios.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ================= APLIKASI ================= -->
+<div class="shell hidden" id="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo"></div><div><strong id="biz-name">Kios Nazira</strong><small>Pembukuan usaha</small></div></div>
+    <nav class="nav">
+      <button class="nav-link active" data-view="dashboard"><svg class="i"><use href="#i-home"/></svg><span>Dashboard</span></button>
+      <button class="nav-link" data-view="transaction"><svg class="i"><use href="#i-plus"/></svg><span>Transaksi</span></button>
+      <button class="nav-link" data-view="cashbook"><svg class="i"><use href="#i-book"/></svg><span>Buku Kas</span></button>
+      <button class="nav-link" data-view="inventory"><svg class="i"><use href="#i-box"/></svg><span>Stok</span></button>
+      <button class="nav-link admin-only" data-view="reports"><svg class="i"><use href="#i-chart"/></svg><span>Laporan</span></button>
+      <button class="nav-link" data-view="settings"><svg class="i"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
+    </nav>
+    <div class="side-user">
+      <div class="avatar js-avatar">?</div>
+      <div><strong class="js-name">—</strong><small class="js-role">—</small></div>
+      <button class="icon-btn js-logout" title="Keluar" aria-label="Keluar"><svg class="i"><use href="#i-out"/></svg></button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><div class="eyebrow">SISTEM PEMBUKUAN</div><h1 id="page-title">Dashboard</h1></div>
+      <div class="today-pill" id="today-label"></div>
+      <div class="mobile-user"><div class="avatar js-avatar">?</div><button class="icon-btn js-logout" aria-label="Keluar"><svg class="i"><use href="#i-out"/></svg></button></div>
+    </header>
+
+    <!-- Dashboard -->
+    <section class="view" id="view-dashboard">
+      <div class="hero admin-only">
+        <span>Total saldo kas &amp; bank</span><strong id="stat-total">Rp0</strong>
+        <div class="hero-split">
+          <div><small><svg class="i" style="width:14px;height:14px"><use href="#i-cash"/></svg>Tunai</small><b id="stat-cash">Rp0</b></div>
+          <div><small><svg class="i" style="width:14px;height:14px"><use href="#i-card"/></svg>Bank</small><b id="stat-bank">Rp0</b></div>
+        </div>
+      </div>
+      <div class="grid2">
+        <article class="stat"><div class="ic g"><svg class="i"><use href="#i-up"/></svg></div><div><span>Penjualan hari ini</span><strong id="stat-sales">Rp0</strong><small id="stat-sales-month"></small></div></article>
+        <article class="stat"><div class="ic r"><svg class="i"><use href="#i-down"/></svg></div><div><span>Pengeluaran hari ini</span><strong id="stat-expenses">Rp0</strong><small id="stat-expenses-month"></small></div></article>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h3>Penjualan 7 hari terakhir</h3><p>Total penjualan per hari</p></div></div>
+        <div class="chart" id="chart"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h3>Transaksi terbaru</h3><p>Aktivitas terakhir di kios</p></div><button class="btn btn-light btn-sm" data-goto="cashbook">Semua</button></div>
+        <ul class="tx-list" id="recent-list"></ul>
+      </div>
+    </section>
+
+    <!-- Transaksi -->
+    <section class="view hidden" id="view-transaction">
+      <div class="panel">
+        <div class="panel-head"><div><h3>Catat transaksi</h3><p>Pilih jenis, isi data, lalu simpan.</p></div></div>
+        <form class="panel-body" id="transaction-form">
+          <div class="alert info hidden" id="edit-banner" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span id="edit-text"></span><button type="button" class="btn btn-light btn-sm" id="cancel-edit">Batal ubah</button></div>
+          <div class="chips" id="type-chips"></div>
+          <input type="hidden" id="tx-type" value="Penjualan">
+          <div class="form-grid">
+            <label class="field">Tanggal<input type="date" id="tx-date" required></label>
+            <label class="field">Kategori<input id="tx-category" required placeholder="Contoh: Penjualan harian"></label>
+            <label class="field">Metode / akun asal<select id="tx-method"><option>Tunai</option><option>Bank</option></select></label>
+            <label class="field hidden" id="target-wrap">Akun tujuan<select id="tx-target"><option>Bank</option><option>Tunai</option></select></label>
+            <label class="field" id="item-wrap">Barang<select id="tx-item"></select></label>
+            <label class="field" id="qty-wrap">Jumlah<input type="number" id="tx-qty" min="0.01" step="0.01" value="1" inputmode="decimal"></label>
+            <label class="field" id="price-wrap">Harga satuan (Rp)<input type="number" id="tx-price" min="0" step="1" value="" inputmode="numeric" placeholder="0"></label>
+            <label class="field hidden" id="total-wrap">Nominal (Rp)<input type="number" id="tx-total" min="1" step="1" value="" inputmode="numeric" placeholder="0"></label>
+            <label class="field full">Keterangan<input id="tx-description" placeholder="Catatan tambahan (opsional)"></label>
+            <label class="field full hidden" id="note-wrap">Alasan perubahan<input id="tx-note" placeholder="Contoh: salah input jumlah"></label>
+            <div class="preview" id="preview"><span>Total transaksi</span><span id="preview-total">Rp0</span></div>
+          </div>
+          <div class="form-actions"><button class="btn btn-light" type="reset">Kosongkan</button><button class="btn btn-primary" type="submit" id="save-button">Simpan transaksi</button></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Buku kas -->
+    <section class="view hidden" id="view-cashbook">
+      <div class="panel">
+        <div class="panel-head"><div><h3>Buku kas</h3><p>Riwayat transaksi berdasarkan tanggal.</p></div></div>
+        <div class="filters"><label>Dari<input type="date" id="cash-start"></label><label>Sampai<input type="date" id="cash-end"></label><button class="btn btn-primary" id="filter-cash">Terapkan</button><button class="btn btn-light" id="reset-cash">Reset</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>ID</th><th>Jenis</th><th>Keterangan</th><th>Akun</th><th class="right">Masuk</th><th class="right">Keluar</th><th>Oleh / catatan</th><th class="admin-only right">Aksi</th></tr></thead><tbody id="cash-body"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- Stok -->
+    <section class="view hidden" id="view-inventory">
+      <div class="welcome"><div><h2>Persediaan ikan</h2><p>Bertambah saat pembelian, berkurang saat penjualan.</p></div><button class="btn btn-primary admin-only" id="show-item-form"><svg class="i" style="width:16px;height:16px"><use href="#i-plus"/></svg>Barang</button></div>
+      <div class="panel hidden admin-only" id="item-form-panel">
+        <div class="panel-head"><div><h3>Tambah barang</h3><p>Gunakan nama dan satuan yang konsisten.</p></div></div>
+        <form class="panel-body" id="item-form"><div class="form-grid">
+          <label class="field">Nama barang<input id="item-name" required placeholder="Contoh: Ikan Gurami"></label>
+          <label class="field">Satuan<select id="item-unit"><option>kg</option><option>ekor</option><option>ikat</option><option>pcs</option></select></label>
+          <label class="field">Stok awal<input type="number" id="item-opening" min="0" step="0.01" value="0"></label>
+          <label class="field">Stok minimum<input type="number" id="item-min" min="0" step="0.01" value="0"></label>
+        </div><div class="form-actions"><button class="btn btn-light" type="button" id="cancel-item">Batal</button><button class="btn btn-primary" type="submit">Simpan barang</button></div></form>
+      </div>
+      <div class="panel"><div class="table-wrap"><table><thead><tr><th>Barang</th><th>Satuan</th><th class="right">Stok</th><th class="right">Minimum</th><th>Status</th></tr></thead><tbody id="inventory-body"></tbody></table></div></div>
+    </section>
+
+    <!-- Laporan -->
+    <section class="view hidden admin-only" id="view-reports">
+      <div class="panel">
+        <div class="panel-head"><div><h3>Laporan periode</h3><p>Ringkasan arus kas pada tanggal terpilih.</p></div></div>
+        <div class="filters"><label>Dari<input type="date" id="report-start"></label><label>Sampai<input type="date" id="report-end"></label><button class="btn btn-primary" id="run-report">Buat laporan</button><button class="btn btn-light" id="print-report">Cetak</button></div>
+        <div class="report-grid">
+          <div class="report-item"><span>Kas masuk</span><strong id="report-in">Rp0</strong></div>
+          <div class="report-item"><span>Kas keluar</span><strong id="report-out">Rp0</strong></div>
+          <div class="report-item"><span>Selisih arus kas</span><strong id="report-net">Rp0</strong></div>
+          <div class="report-item"><span>Penjualan</span><strong id="report-sales">Rp0</strong></div>
+          <div class="report-item"><span>Pembelian ikan</span><strong id="report-purchases">Rp0</strong></div>
+          <div class="report-item"><span>Biaya operasional</span><strong id="report-operating">Rp0</strong></div>
+        </div>
+        <p class="note" style="margin:0 20px 14px">Selisih arus kas bukan laba bersih; laba akurat perlu harga pokok dan stok akhir.</p>
+        <div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Keterangan</th><th>Metode</th><th class="right">Nominal</th><th>Oleh</th></tr></thead><tbody id="report-body"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- Pengaturan -->
+    <section class="view hidden" id="view-settings">
+      <div class="panel">
+        <div class="panel-head"><div><h3>Akun saya</h3><p id="me-line"></p></div></div>
+        <form class="panel-body" id="password-form"><div class="form-grid">
+          <label class="field full">Kata sandi lama<input type="password" id="pw-old" autocomplete="current-password" required></label>
+          <label class="field">Kata sandi baru<input type="password" id="pw-new" autocomplete="new-password" minlength="6" required></label>
+          <label class="field">Ulangi kata sandi baru<input type="password" id="pw-new2" autocomplete="new-password" minlength="6" required></label>
+        </div><div class="form-actions"><button class="btn btn-primary" type="submit">Ubah kata sandi</button></div></form>
+      </div>
+
+      <div class="panel admin-only">
+        <div class="panel-head"><div><h3>Saldo awal</h3><p>Saldo pada tanggal mulai pembukuan. Jangan diubah tanpa rekonsiliasi.</p></div></div>
+        <form class="panel-body" id="settings-form"><div class="form-grid">
+          <label class="field">Saldo awal tunai (Rp)<input type="number" min="0" step="1" id="opening-cash" required></label>
+          <label class="field">Saldo awal bank (Rp)<input type="number" min="0" step="1" id="opening-bank" required></label>
+        </div><div class="form-actions"><button class="btn btn-primary" type="submit">Simpan saldo awal</button></div></form>
+      </div>
+
+      <div class="panel admin-only">
+        <div class="panel-head"><div><h3>Pengguna</h3><p>Kelola akun karyawan yang boleh masuk.</p></div><button class="btn btn-primary btn-sm" id="new-user">+ Pengguna</button></div>
+        <form class="panel-body hidden" id="user-form" style="border-bottom:1px solid var(--line)"><div class="form-grid">
+          <label class="field">Username<input id="u-username" placeholder="mis. siti" autocapitalize="none" required></label>
+          <label class="field">Nama lengkap<input id="u-name" required></label>
+          <label class="field">Peran<select id="u-role"><option>Kasir</option><option>Admin</option></select></label>
+          <label class="field">Kata sandi<input type="password" id="u-pass" autocomplete="new-password" placeholder="Minimal 6 karakter"></label>
+          <label class="field full" id="u-active-wrap" style="grid-template-columns:auto 1fr;align-items:center;gap:9px"><input type="checkbox" id="u-active" checked style="width:auto"> Akun aktif</label>
+        </div><div class="form-actions"><button class="btn btn-light" type="button" id="cancel-user">Batal</button><button class="btn btn-primary" type="submit">Simpan pengguna</button></div></form>
+        <div class="table-wrap"><table style="min-width:520px"><thead><tr><th>Pengguna</th><th>Peran</th><th>Status</th><th>Login terakhir</th><th></th></tr></thead><tbody id="users-body"></tbody></table></div>
+        <p class="note" style="margin:14px 20px">Kasir tidak melihat saldo, laporan, maupun pengaturan, dan tidak dapat mencatat modal/pengambilan pribadi.</p>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="modal-bg hidden" id="modal"><div class="modal">
+  <h3>Batalkan transaksi</h3><p id="modal-text"></p>
+  <label class="field">Alasan pembatalan<input id="modal-reason" placeholder="Contoh: pembeli batal"></label>
+  <div class="alert hidden" id="modal-err"></div>
+  <div class="form-actions"><button class="btn btn-light" id="modal-close" type="button">Kembali</button><button class="btn btn-primary" id="modal-ok" type="button">Batalkan transaksi</button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+<?!= include("JavaScript"); ?>
+</body>
+</html>
